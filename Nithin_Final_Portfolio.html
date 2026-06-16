@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nithin V V | Portfolio</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0f1c;color:#fff;font-family:Arial,sans-serif}
+nav{position:fixed;top:0;width:100%;padding:18px 8%;background:rgba(0,0,0,.7);backdrop-filter:blur(10px);display:flex;justify-content:space-between;z-index:1000}
+nav a{color:#fff;text-decoration:none;margin-left:20px}
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:space-between;padding:100px 8%;gap:50px}
+.gradient{background:linear-gradient(90deg,#00d4ff,#7d6cff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero h1{font-size:4rem}
+.hero p{margin:20px 0;color:#c5d0ea;line-height:1.8}
+.btn{display:inline-block;padding:14px 28px;border-radius:40px;background:#00d4ff;color:#000;text-decoration:none;font-weight:bold}
+.hero-photo{width:650px;max-width:100%;border-radius:30px;box-shadow:0 0 40px rgba(0,212,255,.4);animation:float 5s infinite ease-in-out;transition:.4s}
+@keyframes float{50%{transform:translateY(-15px)}}
+section{padding:80px 8%}
+.card{background:#131c2f;padding:25px;border-radius:20px;margin:15px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
+.gallery img{width:100%;height:240px;object-fit:cover;border-radius:15px}
+.robot{position:fixed;bottom:30px;right:30px;width:90px;height:90px;border-radius:50%;background:#00d4ff;color:#000;display:flex;align-items:center;justify-content:center;font-size:40px;box-shadow:0 0 30px #00d4ff;animation:float 3s infinite}
+footer{text-align:center;padding:30px;background:#111827}
+iframe{width:100%;height:350px;border:none;border-radius:20px}
+@media(max-width:900px){.hero{flex-direction:column-reverse;text-align:center}.hero h1{font-size:2.8rem}}
+</style>
+</head>
+<body>
+
+<nav>
+<h2>Nithin V V</h2>
+<div>
+<a href="#about">About</a>
+<a href="#projects">Projects</a>
+<a href="#gallery">Gallery</a>
+<a href="#contact">Contact</a>
+</div>
+</nav>
+
+<section class="hero">
+<div>
+<h1>Hi, I'm <span class="gradient">Nithin V V </span></h1>
+<p>Mechanical Engineer • Project Engineer • Shipping Coordinator • System Administrator • Cybersecurity Enthusiast</p>
+<a class="btn" href="https://wa.me/919847383734">WhatsApp Me</a>
+</div>
+
+<img src="https://i.ibb.co/qYH025XR/IMG-20250323-WA0027.jpg" alt="Nithin" class="hero-photo">
+</section>
+
+<section id="about">
+<h2>About Me</h2>
+<div class="card">
+Experienced professional with a multidisciplinary background spanning Engineering,International Shipping Operations, Administration, IT Infrastructure, and Technology Solutions. Passionate about scientific research and advanced technologies, with a strong interest in Quantum Physics, Higgs Field theory, Astrophysics, Astronomy, and Cosmology. Enthusiastic about exploring the fundamental principles governing the universe, including particle physics, space science, and theoretical physics. Skilled in Reverse Engineering, Electronics Programming, Embedded Systems, Automation, and Technology Innovation, with hands-on involvement in research-oriented and experimental projects. Continuously engaged in studying emerging scientific concepts, artificial intelligence, computational modeling, data analysis, space exploration technologies, and advanced engineering solutions. Dedicated to bridging the gap between scientific discovery and practical technological applications through innovation, problem-solving, and interdisciplinary research. Strong advocate of lifelong learning, scientific inquiry, and the pursuit of knowledge across physics, astronomy, engineering, computer science, and next-generation technologies.</div>
+</section>
+
+<section id="projects">
+<h2>Projects</h2>
+<div class="grid">
+<div class="card">Purchase Order Tracking System</div>
+<div class="card">Automation Solutions</div>
+<div class="card">Embedded Electronics Projects</div>
+<div class="card">B2B Business Development</div>
+</div>
+</section>
+
+<section id="gallery">
+<h2>Project Gallery</h2>
+<div class="grid gallery">
+<img src="https://images.unsplash.com/photo-1518770660439-4636190af475">
+<img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d">
+<img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3">
+<img src="https://images.unsplash.com/photo-1581092921461-eab62e97a780">
+</div>
+</section>
+
+<section>
+<h2>Location</h2>
+<iframe src="https://maps.google.com/maps?q=Kochi%20Kerala&t=&z=11&ie=UTF8&iwloc=&output=embed"></iframe>
+</section>
+
+<section id="contact">
+<h2>Contact</h2>
+<div class="card">
+<p>📱 WhatsApp: +91 9847383734</p>
+<p>📍 Kochi, Kerala, India</p>
+</div>
+</section>
+
+<div class="robot">🤖</div>
+
+<footer>© 2026 Nithin V. All Rights Reserved.</footer>
+
+<script>
+const photo=document.querySelector('.hero-photo');
+document.addEventListener('mousemove',(e)=>{
+const x=(window.innerWidth/2-e.clientX)/35;
+const y=(window.innerHeight/2-e.clientY)/35;
+photo.style.transform=`rotateY(${x}deg) rotateX(${-y}deg) scale(1.03)`;
+});
+</script>
+
+</body>
+</html>
