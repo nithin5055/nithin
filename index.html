@@ -1,100 +1,292 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AI Fitness Coach Developed by NITHIN VV</title>
+
+  <meta name="theme-color" content="#101522">
+  <meta name="description" content="AI Fitness Coach with real-time pose tracking and squat feedback. Developed by Nithin VV.">
+
+  <title>AI Fitness Coach | Nithin VV</title>
 
   <style>
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #101522;
+      --panel: #1c2435;
+      --accent: #55f5a3;
+      --warning: #ffd166;
+      --danger: #ff6877;
+      --muted: #bdc7da;
+    }
+
+    html {
+      min-height: 100%;
+      -webkit-text-size-adjust: 100%;
+    }
 
     body {
       margin: 0;
+      min-height: 100vh;
       font-family: Arial, sans-serif;
-      background: #101522;
+      background: var(--bg);
       color: white;
       text-align: center;
+      overflow-x: hidden;
     }
 
-    header { padding: 22px 12px; }
+    button, select {
+      font: inherit;
+    }
 
-    h1 { margin: 0; color: #55f5a3; }
+    header {
+      padding: 24px 16px 18px;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--accent);
+      font-size: clamp(27px, 5vw, 42px);
+      line-height: 1.2;
+    }
+
+    header p {
+      color: var(--muted);
+      margin: 12px 0 8px;
+      font-size: clamp(14px, 2.5vw, 17px);
+    }
+
+    .developer {
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: bold;
+      margin-top: 12px;
+    }
 
     .container {
-      width: min(950px, 95%);
-      margin: auto;
+      width: min(950px, calc(100% - 32px));
+      margin: 0 auto;
+      padding-bottom: 12px;
     }
 
     .camera {
       position: relative;
       width: 100%;
+      aspect-ratio: 16 / 9;
       background: #080b12;
+      border: 1px solid #30394b;
       border-radius: 16px;
       overflow: hidden;
-      aspect-ratio: 16 / 9;
+      isolation: isolate;
     }
 
     video, canvas {
       position: absolute;
+      inset: 0;
       width: 100%;
       height: 100%;
-      top: 0;
-      left: 0;
       object-fit: contain;
     }
 
-    video { transform: scaleX(-1); }
-    canvas { pointer-events: none; }
+    video {
+      transform: scaleX(-1);
+    }
+
+    canvas {
+      pointer-events: none;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 16px 0;
+    }
+
+    select, button {
+      min-height: 48px;
+      padding: 12px 18px;
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      max-width: 100%;
+    }
+
+    select {
+      background: #fff;
+      color: #101522;
+      min-width: 130px;
+    }
+
+    button {
+      background: var(--accent);
+      color: var(--bg);
+      cursor: pointer;
+      font-weight: bold;
+      touch-action: manipulation;
+      transition: opacity 0.2s ease;
+    }
+
+    button:active:not(:disabled) {
+      transform: scale(0.98);
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    #stop {
+      background: var(--danger);
+    }
 
     .panel {
       margin: 16px 0;
-      padding: 20px;
-      background: #1c2435;
+      padding: 22px;
+      background: var(--panel);
+      border: 1px solid #293449;
       border-radius: 14px;
     }
 
     .feedback {
-      font-size: 24px;
+      font-size: clamp(20px, 4vw, 26px);
       font-weight: bold;
-      color: #ffd166;
+      color: var(--warning);
+      overflow-wrap: anywhere;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
     }
 
     .stats {
-      display: flex;
-      justify-content: space-around;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 12px;
-      flex-wrap: wrap;
     }
 
-    .stat { min-width: 100px; }
+    .stat {
+      min-width: 0;
+      padding: 12px 6px;
+      border-radius: 10px;
+      background: #151c2b;
+    }
 
     .number {
-      font-size: 32px;
-      color: #55f5a3;
+      font-size: clamp(25px, 5vw, 34px);
+      color: var(--accent);
       font-weight: bold;
+      overflow-wrap: anywhere;
     }
 
-    button, select {
-      padding: 12px 18px;
-      border: none;
-      border-radius: 8px;
-      margin: 6px;
-      font-size: 16px;
+    .stat-label {
+      margin-top: 6px;
+      font-size: 14px;
+      color: var(--muted);
     }
 
-    button {
-      background: #55f5a3;
-      color: #101522;
-      cursor: pointer;
-      font-weight: bold;
+    footer {
+      padding: 18px 16px calc(20px + env(safe-area-inset-bottom));
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7;
     }
 
-    button:disabled { opacity: .5; cursor: not-allowed; }
+    footer strong {
+      color: var(--accent);
+    }
 
-    #stop { background: #ff6877; }
+    @media (max-width: 600px) {
+      header {
+        padding: 20px 12px 14px;
+      }
 
-    .hint { color: #bdc7da; font-size: 14px; }
+      .container {
+        width: calc(100% - 20px);
+      }
+
+      .camera {
+        aspect-ratio: 3 / 4;
+        max-height: 65svh;
+        border-radius: 12px;
+      }
+
+      .controls {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin: 12px 0;
+      }
+
+      .controls select {
+        grid-column: 1 / -1;
+        width: 100%;
+      }
+
+      .controls button {
+        width: 100%;
+        padding: 12px 8px;
+        font-size: 14px;
+      }
+
+      .panel {
+        padding: 16px 12px;
+        margin: 12px 0;
+        border-radius: 12px;
+      }
+
+      .stats {
+        gap: 6px;
+      }
+
+      .stat {
+        padding: 12px 3px;
+      }
+
+      .stat-label {
+        font-size: 12px;
+        line-height: 1.4;
+      }
+
+      .hint {
+        font-size: 13px;
+      }
+    }
+
+    @media (max-width: 350px) {
+      .container {
+        width: calc(100% - 14px);
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .stat {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 14px;
+        gap: 8px;
+      }
+
+      .number {
+        font-size: 24px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        transition: none !important;
+      }
+    }
   </style>
 </head>
 
@@ -102,6 +294,7 @@
   <header>
     <h1>AI Fitness Coach</h1>
     <p>Real-time body tracking and exercise feedback</p>
+    <div class="developer">Developed by Nithin VV</div>
   </header>
 
   <main class="container">
@@ -110,33 +303,36 @@
       <canvas id="canvas"></canvas>
     </div>
 
-    <div>
-      <select id="exercise">
+    <div class="controls">
+      <select id="exercise" aria-label="Choose exercise">
         <option value="squat">Squats</option>
       </select>
-      <button id="start">Start Camera</button>
-      <button id="stop" disabled>Stop Camera</button>
+
+      <button id="start" type="button">Start Camera</button>
+      <button id="stop" type="button" disabled>Stop Camera</button>
     </div>
 
-    <div class="panel">
+    <div class="panel" aria-live="polite">
       <div id="feedback" class="feedback">Click Start Camera</div>
       <p id="detail" class="hint">
-        Stand where your full body is visible.
+        Position your phone so your full body is visible.
       </p>
     </div>
 
     <div class="panel stats">
       <div class="stat">
         <div class="number" id="reps">0</div>
-        <div>Repetitions</div>
+        <div class="stat-label">Repetitions</div>
       </div>
+
       <div class="stat">
         <div class="number" id="angle">--</div>
-        <div>Knee Angle</div>
+        <div class="stat-label">Knee Angle</div>
       </div>
+
       <div class="stat">
         <div class="number" id="status">--</div>
-        <div>Form Status</div>
+        <div class="stat-label">Form Status</div>
       </div>
     </div>
 
@@ -145,6 +341,11 @@
       This is an educational prototype, not a medical assessment.
     </p>
   </main>
+
+  <footer>
+    AI Fitness Coach<br>
+    Designed and developed by <strong>Nithin VV</strong>
+  </footer>
 
   <script type="module">
     import {
@@ -168,40 +369,50 @@
     let stream;
     let running = false;
     let lastVideoTime = -1;
+    let animationId = null;
     let reps = 0;
     let phase = "up";
     let badFrames = 0;
 
-    // Landmark indices:
-    // 11/12 shoulders, 23/24 hips,
-    // 25/26 knees, 27/28 ankles.
-
     function angleBetween(a, b, c) {
-      const radians = Math.atan2(c.y - b.y, c.x - b.x)
-                    - Math.atan2(a.y - b.y, a.x - b.x);
+      const radians =
+        Math.atan2(c.y - b.y, c.x - b.x) -
+        Math.atan2(a.y - b.y, a.x - b.x);
 
       let degrees = Math.abs(radians * 180 / Math.PI);
       if (degrees > 180) degrees = 360 - degrees;
+
       return degrees;
     }
 
+    function resizeCanvas() {
+      if (!video.videoWidth || !video.videoHeight) return;
+
+      if (
+        canvas.width !== video.videoWidth ||
+        canvas.height !== video.videoHeight
+      ) {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+      }
+    }
+
     function drawPose(landmarks) {
+      resizeCanvas();
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
       const connections = [
         [11,12], [11,23], [12,24], [23,24],
         [11,13], [13,15], [12,14], [14,16],
         [23,25], [25,27], [24,26], [26,28]
       ];
 
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      ctx.lineWidth = 4;
+      ctx.lineWidth = Math.max(2, canvas.width / 320);
       ctx.strokeStyle = "#55f5a3";
       ctx.fillStyle = "#ffffff";
 
       function point(i) {
-        // Mirror coordinates to match the mirrored video.
         return {
           x: (1 - landmarks[i].x) * canvas.width,
           y: landmarks[i].y * canvas.height
@@ -209,8 +420,10 @@
       }
 
       for (const [a, b] of connections) {
-        if (landmarks[a].visibility < 0.5 ||
-            landmarks[b].visibility < 0.5) continue;
+        if (
+          (landmarks[a].visibility ?? 0) < 0.5 ||
+          (landmarks[b].visibility ?? 0) < 0.5
+        ) continue;
 
         const p1 = point(a);
         const p2 = point(b);
@@ -222,11 +435,12 @@
       }
 
       for (let i = 11; i <= 28; i++) {
-        if (landmarks[i].visibility < 0.5) continue;
+        if ((landmarks[i].visibility ?? 0) < 0.5) continue;
 
         const p = point(i);
         ctx.beginPath();
-        ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, Math.max(3, canvas.width / 250), 0,
+          Math.PI * 2);
         ctx.fill();
       }
     }
@@ -240,16 +454,18 @@
     function analyzePose(landmarks) {
       const required = [11, 12, 23, 24, 25, 26, 27, 28];
 
-      if (required.some(i => landmarks[i].visibility < 0.55)) {
+      if (required.some(
+        i => (landmarks[i].visibility ?? 0) < 0.55
+      )) {
         showFeedback(
           "Body not fully visible",
           "Move back and keep your shoulders, hips, knees and ankles in view."
         );
         statusText.textContent = "--";
+        angleText.textContent = "--";
         return;
       }
 
-      // Analyze the more visible leg.
       const leftVisibility = Math.min(
         landmarks[23].visibility,
         landmarks[25].visibility,
@@ -266,18 +482,19 @@
         ? [23, 25, 27, 11]
         : [24, 26, 28, 12];
 
-      const [hip, knee, ankle, shoulder] = ids.map(i => landmarks[i]);
+      const [hip, knee, ankle, shoulder] =
+        ids.map(i => landmarks[i]);
 
       const kneeAngle = angleBetween(hip, knee, ankle);
       angleText.textContent = Math.round(kneeAngle) + "°";
 
-      // A rough back-alignment indicator, not a clinical measurement.
       const torsoAngle = Math.abs(
-        Math.atan2(shoulder.x - hip.x, hip.y - shoulder.y)
-        * 180 / Math.PI
+        Math.atan2(
+          shoulder.x - hip.x,
+          hip.y - shoulder.y
+        ) * 180 / Math.PI
       );
 
-      // Track squat phases using knee angle.
       if (kneeAngle > 155) {
         if (phase === "down") {
           phase = "up";
@@ -324,7 +541,11 @@
     }
 
     async function loadModel() {
-      feedback.textContent = "Loading pose detection...";
+      showFeedback(
+        "Loading pose detection...",
+        "Please wait while the AI model initializes."
+      );
+
       const vision = await FilesetResolver.forVisionTasks(
         "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm"
       );
@@ -343,68 +564,53 @@
     function loop() {
       if (!running) return;
 
-      if (video.readyState >= 2 &&
-          video.currentTime !== lastVideoTime &&
-          poseLandmarker) {
+      if (
+        video.readyState >= 2 &&
+        video.currentTime !== lastVideoTime &&
+        poseLandmarker
+      ) {
         lastVideoTime = video.currentTime;
 
-        const result = poseLandmarker.detectForVideo(
-          video,
-          performance.now()
-        );
-
-        if (result.landmarks && result.landmarks.length) {
-          const landmarks = result.landmarks[0];
-          drawPose(landmarks);
-          analyzePose(landmarks);
-        } else {
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
-          showFeedback(
-            "No person detected",
-            "Face the camera and make sure your body is visible."
+        try {
+          const result = poseLandmarker.detectForVideo(
+            video,
+            performance.now()
           );
-          statusText.textContent = "--";
+
+          if (result.landmarks?.length) {
+            const landmarks = result.landmarks[0];
+            drawPose(landmarks);
+            analyzePose(landmarks);
+          } else {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            showFeedback(
+              "No person detected",
+              "Face sideways to the camera and keep your body visible."
+            );
+            statusText.textContent = "--";
+            angleText.textContent = "--";
+          }
+        } catch (error) {
+          console.error("Pose detection failed:", error);
+          showFeedback(
+            "Pose detection issue",
+            "Try repositioning your phone or restarting the camera."
+          );
         }
       }
 
-      requestAnimationFrame(loop);
+      if (running) {
+        animationId = requestAnimationFrame(loop);
+      }
     }
 
-    startBtn.addEventListener("click", async () => {
-      startBtn.disabled = true;
-
-      try {
-        if (!poseLandmarker) await loadModel();
-
-        stream = await navigator.mediaDevices.getUserMedia({
-          video: {
-            facingMode: "user",
-            width: { ideal: 1280 },
-            height: { ideal: 720 }
-          },
-          audio: false
-        });
-
-        video.srcObject = stream;
-        await video.play();
-
-        running = true;
-        startBtn.disabled = true;
-        stopBtn.disabled = false;
-        showFeedback("Camera active", "Stand sideways to the camera.");
-        loop();
-      } catch (error) {
-        console.error(error);
-        showFeedback(
-          "Could not start camera",
-          "Allow camera permission and use localhost or HTTPS. Check your internet connection and try again."
-        );
-        startBtn.disabled = false;
-      }
-    });
-
-    stopBtn.addEventListener("click", () => {
+    async function stopCamera() {
       running = false;
+
+      if (animationId !== null) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+      }
 
       if (stream) {
         stream.getTracks().forEach(track => track.stop());
@@ -416,9 +622,90 @@
 
       startBtn.disabled = false;
       stopBtn.disabled = true;
-      showFeedback("Camera stopped", "Click Start Camera to begin again.");
-      statusText.textContent = "--";
+
       angleText.textContent = "--";
+      statusText.textContent = "--";
+
+      showFeedback(
+        "Camera stopped",
+        "Click Start Camera to begin again."
+      );
+    }
+
+    startBtn.addEventListener("click", async () => {
+      startBtn.disabled = true;
+
+      try {
+        if (!navigator.mediaDevices?.getUserMedia) {
+          throw new Error(
+            "Camera access requires HTTPS or localhost in a supported browser."
+          );
+        }
+
+        if (!poseLandmarker) {
+          await loadModel();
+        }
+
+        stream = await navigator.mediaDevices.getUserMedia({
+          audio: false,
+          video: {
+            facingMode: "user",
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          }
+        });
+
+        video.srcObject = stream;
+        await video.play();
+
+        running = true;
+        lastVideoTime = -1;
+        stopBtn.disabled = false;
+
+        showFeedback(
+          "Camera active",
+          "Stand sideways to the camera with your full body visible.",
+          true
+        );
+
+        loop();
+      } catch (error) {
+        console.error(error);
+
+        if (stream) {
+          stream.getTracks().forEach(track => track.stop());
+          stream = null;
+        }
+
+        video.srcObject = null;
+        running = false;
+        startBtn.disabled = false;
+        stopBtn.disabled = true;
+
+        const message = error.name === "NotAllowedError"
+          ? "Allow camera permission in your browser settings and try again."
+          : error.name === "NotFoundError"
+          ? "No available camera was found on this device."
+          : error.message?.includes("HTTPS")
+          ? error.message
+          : "Check camera permission, internet access and browser compatibility, then try again.";
+
+        showFeedback("Could not start camera", message);
+      }
+    });
+
+    stopBtn.addEventListener("click", stopCamera);
+
+    window.addEventListener("pagehide", () => {
+      running = false;
+
+      if (animationId !== null) {
+        cancelAnimationFrame(animationId);
+      }
+
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+      }
     });
   </script>
 </body>
