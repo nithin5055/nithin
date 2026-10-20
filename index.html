@@ -1,117 +1,425 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Nithin V V | Portfolio</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#0a0f1c;color:#fff;font-family:Arial,sans-serif}
-nav{position:fixed;top:0;width:100%;padding:18px 8%;background:rgba(0,0,0,.7);backdrop-filter:blur(10px);display:flex;justify-content:space-between;z-index:1000}
-nav a{color:#fff;text-decoration:none;margin-left:20px;padding:10px 18px;border-radius:30px;background:rgba(0,212,255,.12);border:1px solid rgba(0,212,255,.35);transition:.3s} nav a:hover{background:#00d4ff;color:#000;transform:translateY(-2px)}
-.hero{min-height:100vh;display:flex;align-items:center;justify-content:space-between;padding:100px 8%;gap:50px}
-.gradient{background:linear-gradient(90deg,#00d4ff,#7d6cff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.hero h1{font-size:4rem}
-.hero p{margin:20px 0;color:#c5d0ea;line-height:1.8}
-.btn{display:inline-block;padding:14px 28px;border-radius:40px;background:#00d4ff;color:#000;text-decoration:none;font-weight:bold}
-.hero-photo{width:500px;max-width:50%;border-radius:30px;box-shadow:0 0 40px rgba(0,212,255,.4);animation:float 5s infinite ease-in-out;transition:.4s}
-@keyframes float{50%{transform:translateY(-15px)}}
-section{padding:80px 8%}
-.card{background:#131c2f;padding:25px;border-radius:20px;margin:15px 0}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
-.gallery img{width:100%;height:240px;object-fit:cover;border-radius:15px}
-.robot{position:fixed;bottom:30px;right:30px;width:90px;height:90px;border-radius:50%;background:#00d4ff;color:#000;display:flex;align-items:center;justify-content:center;font-size:40px;box-shadow:0 0 30px #00d4ff;animation:float 3s infinite}
-footer{text-align:center;padding:30px;background:#111827}
-iframe{width:100%;height:350px;border:none;border-radius:20px}
-@media(max-width:900px){.hero{flex-direction:column-reverse;text-align:center}.hero h1{font-size:2.8rem}}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Fitness Coach Developed by NITHIN VV</title>
 
-.ufo{font-size:70px;display:inline-block;animation:ufohover 3s ease-in-out infinite;position:relative;left:120px;margin-bottom:10px}
-@keyframes ufohover{50%{transform:translateY(-20px)}}
-.social-buttons{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap}
-.social-btn{display:inline-block;padding:12px 22px;border-radius:30px;background:#fff;color:#000;text-decoration:none;font-weight:bold}
-#about{padding-bottom:20px}
-#projects{padding-top:20px}
-.snake-container{background:#131c2f;padding:20px;border-radius:20px;text-align:center}
-canvas{background:#000;border-radius:10px}
-</style>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #101522;
+      color: white;
+      text-align: center;
+    }
+
+    header { padding: 22px 12px; }
+
+    h1 { margin: 0; color: #55f5a3; }
+
+    .container {
+      width: min(950px, 95%);
+      margin: auto;
+    }
+
+    .camera {
+      position: relative;
+      width: 100%;
+      background: #080b12;
+      border-radius: 16px;
+      overflow: hidden;
+      aspect-ratio: 16 / 9;
+    }
+
+    video, canvas {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      object-fit: contain;
+    }
+
+    video { transform: scaleX(-1); }
+    canvas { pointer-events: none; }
+
+    .panel {
+      margin: 16px 0;
+      padding: 20px;
+      background: #1c2435;
+      border-radius: 14px;
+    }
+
+    .feedback {
+      font-size: 24px;
+      font-weight: bold;
+      color: #ffd166;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .stat { min-width: 100px; }
+
+    .number {
+      font-size: 32px;
+      color: #55f5a3;
+      font-weight: bold;
+    }
+
+    button, select {
+      padding: 12px 18px;
+      border: none;
+      border-radius: 8px;
+      margin: 6px;
+      font-size: 16px;
+    }
+
+    button {
+      background: #55f5a3;
+      color: #101522;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:disabled { opacity: .5; cursor: not-allowed; }
+
+    #stop { background: #ff6877; }
+
+    .hint { color: #bdc7da; font-size: 14px; }
+  </style>
 </head>
+
 <body>
+  <header>
+    <h1>AI Fitness Coach</h1>
+    <p>Real-time body tracking and exercise feedback</p>
+  </header>
 
-<nav>
-<h2>Welcome To Singularity </h2>
-<div>
-<a href="#about">About</a>
-<a href="#projects">Projects</a>
-<a href="#gallery">Gallery</a>
-<a href="#contact">Contact</a>
-</div>
-</nav>
+  <main class="container">
+    <div class="camera">
+      <video id="video" autoplay playsinline muted></video>
+      <canvas id="canvas"></canvas>
+    </div>
 
-<section class="hero">
-<div>
-<div class="ufo">🛸</div><h1>Hi, I'm <span class="gradient">Nithin V V </span></h1>
-<p>Mechanical Engineer • EC Council Certifiied Ethical Hacker • Microsoft Certified System engineer • System Administrator • Cybersecurity Enthusiast •Quantum Physics Researcher </p>
-<div class="social-buttons">
-<a class="btn" href="https://wa.me/919847383734">WhatsApp</a>
-<a class="social-btn" href="https://instagram.com/" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
-<a class="social-btn" href="https://linkedin.com/" target="_blank"><i class="fab fa-linkedin"></i> LinkedIn</a>
-</div>
-</div>
+    <div>
+      <select id="exercise">
+        <option value="squat">Squats</option>
+      </select>
+      <button id="start">Start Camera</button>
+      <button id="stop" disabled>Stop Camera</button>
+    </div>
 
-<img src="https://i.ibb.co/pjXvdNN6/eim.jpg" alt="Nithin" class="hero-photo">
-</section>
+    <div class="panel">
+      <div id="feedback" class="feedback">Click Start Camera</div>
+      <p id="detail" class="hint">
+        Stand where your full body is visible.
+      </p>
+    </div>
 
-<section id="about">
-<h2>About Me</h2>
-<div class="card">
-Experienced professional with a multidisciplinary background spanning Engineering,International Shipping Operations, Administration, IT Infrastructure, and Technology Solutions. Passionate about scientific research and advanced technologies, with a strong interest in Quantum Physics, Higgs Field theory, Astrophysics, Astronomy, and Cosmology. Enthusiastic about exploring the fundamental principles governing the universe, including particle physics, space science, and theoretical physics. Skilled in Reverse Engineering, Electronics Programming, Embedded Systems, Automation, and Technology Innovation, with hands-on involvement in research-oriented and experimental projects. Continuously engaged in studying emerging scientific concepts, artificial intelligence, computational modeling, data analysis, space exploration technologies, and advanced engineering solutions. Dedicated to bridging the gap between scientific discovery and practical technological applications through innovation, problem-solving, and interdisciplinary research. Strong advocate of lifelong learning, scientific inquiry, and the pursuit of knowledge across physics, astronomy, engineering, computer science, and next-generation technologies.</div>
-</section>
+    <div class="panel stats">
+      <div class="stat">
+        <div class="number" id="reps">0</div>
+        <div>Repetitions</div>
+      </div>
+      <div class="stat">
+        <div class="number" id="angle">--</div>
+        <div>Knee Angle</div>
+      </div>
+      <div class="stat">
+        <div class="number" id="status">--</div>
+        <div>Form Status</div>
+      </div>
+    </div>
 
-<section id="projects">
-<h2>Projects</h2>
-<div class="grid">
-<div class="card">Purchase Order Tracking System</div>
-<div class="card">Automation Solutions</div>
-<div class="card">Embedded Electronics Projects</div>
-<div class="card">B2B Business Development</div>
-</div>
-</section>
+    <p class="hint">
+      Use a side-facing camera angle for better squat analysis.
+      This is an educational prototype, not a medical assessment.
+    </p>
+  </main>
 
-<section id="gallery">
-<h2>Project Gallery</h2>
-<div class="grid gallery">
-<img src="https://images.unsplash.com/photo-1518770660439-4636190af475">
-<img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d">
-<img src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3">
-<img src="https://images.unsplash.com/photo-1581092921461-eab62e97a780">
-</div>
-</section>
+  <script type="module">
+    import {
+      PoseLandmarker,
+      FilesetResolver
+    } from "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
 
+    const video = document.getElementById("video");
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
 
-<section id="contact">
-<h2>Contact</h2>
-<div class="card">
-<p>📱 WhatsApp: +91 9847383734</p>
-<p>📍  Kerala, India</p>
-<p>📍  Dubai, UAE</p>
-<p>📍  Doha, Qatar</p>
-</div>
-</section>
+    const startBtn = document.getElementById("start");
+    const stopBtn = document.getElementById("stop");
+    const feedback = document.getElementById("feedback");
+    const detail = document.getElementById("detail");
+    const repsText = document.getElementById("reps");
+    const angleText = document.getElementById("angle");
+    const statusText = document.getElementById("status");
 
-<div class="robot">🤖</div>
+    let poseLandmarker;
+    let stream;
+    let running = false;
+    let lastVideoTime = -1;
+    let reps = 0;
+    let phase = "up";
+    let badFrames = 0;
 
-<footer>© 2026 Nithin V. All Rights Reserved.</footer>
+    // Landmark indices:
+    // 11/12 shoulders, 23/24 hips,
+    // 25/26 knees, 27/28 ankles.
 
-<script>
-const photo=document.querySelector('.hero-photo');
-document.addEventListener('mousemove',(e)=>{
-const x=(window.innerWidth/2-e.clientX)/35;
-const y=(window.innerHeight/2-e.clientY)/35;
-photo.style.transform=`rotateY(${x}deg) rotateX(${-y}deg) scale(1.03)`;
-});
+    function angleBetween(a, b, c) {
+      const radians = Math.atan2(c.y - b.y, c.x - b.x)
+                    - Math.atan2(a.y - b.y, a.x - b.x);
 
-</script>
+      let degrees = Math.abs(radians * 180 / Math.PI);
+      if (degrees > 180) degrees = 360 - degrees;
+      return degrees;
+    }
 
+    function drawPose(landmarks) {
+      const connections = [
+        [11,12], [11,23], [12,24], [23,24],
+        [11,13], [13,15], [12,14], [14,16],
+        [23,25], [25,27], [24,26], [26,28]
+      ];
+
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      ctx.lineWidth = 4;
+      ctx.strokeStyle = "#55f5a3";
+      ctx.fillStyle = "#ffffff";
+
+      function point(i) {
+        // Mirror coordinates to match the mirrored video.
+        return {
+          x: (1 - landmarks[i].x) * canvas.width,
+          y: landmarks[i].y * canvas.height
+        };
+      }
+
+      for (const [a, b] of connections) {
+        if (landmarks[a].visibility < 0.5 ||
+            landmarks[b].visibility < 0.5) continue;
+
+        const p1 = point(a);
+        const p2 = point(b);
+
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.stroke();
+      }
+
+      for (let i = 11; i <= 28; i++) {
+        if (landmarks[i].visibility < 0.5) continue;
+
+        const p = point(i);
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function showFeedback(message, description, good = false) {
+      feedback.textContent = message;
+      feedback.style.color = good ? "#55f5a3" : "#ffd166";
+      detail.textContent = description;
+    }
+
+    function analyzePose(landmarks) {
+      const required = [11, 12, 23, 24, 25, 26, 27, 28];
+
+      if (required.some(i => landmarks[i].visibility < 0.55)) {
+        showFeedback(
+          "Body not fully visible",
+          "Move back and keep your shoulders, hips, knees and ankles in view."
+        );
+        statusText.textContent = "--";
+        return;
+      }
+
+      // Analyze the more visible leg.
+      const leftVisibility = Math.min(
+        landmarks[23].visibility,
+        landmarks[25].visibility,
+        landmarks[27].visibility
+      );
+
+      const rightVisibility = Math.min(
+        landmarks[24].visibility,
+        landmarks[26].visibility,
+        landmarks[28].visibility
+      );
+
+      const ids = leftVisibility >= rightVisibility
+        ? [23, 25, 27, 11]
+        : [24, 26, 28, 12];
+
+      const [hip, knee, ankle, shoulder] = ids.map(i => landmarks[i]);
+
+      const kneeAngle = angleBetween(hip, knee, ankle);
+      angleText.textContent = Math.round(kneeAngle) + "°";
+
+      // A rough back-alignment indicator, not a clinical measurement.
+      const torsoAngle = Math.abs(
+        Math.atan2(shoulder.x - hip.x, hip.y - shoulder.y)
+        * 180 / Math.PI
+      );
+
+      // Track squat phases using knee angle.
+      if (kneeAngle > 155) {
+        if (phase === "down") {
+          phase = "up";
+          reps++;
+          repsText.textContent = reps;
+        }
+      } else if (kneeAngle < 110) {
+        phase = "down";
+      }
+
+      if (kneeAngle < 155 && torsoAngle > 55) {
+        badFrames++;
+      } else {
+        badFrames = Math.max(0, badFrames - 1);
+      }
+
+      if (badFrames > 8) {
+        showFeedback(
+          "Check your torso",
+          "Try keeping your chest lifted and your spine neutral."
+        );
+        statusText.textContent = "CHECK";
+      } else if (phase === "down" && kneeAngle > 125) {
+        showFeedback(
+          "Go a little lower",
+          "Bend your knees and hips further, only as far as comfortable."
+        );
+        statusText.textContent = "CHECK";
+      } else if (phase === "down") {
+        showFeedback(
+          "Good depth!",
+          "Keep your balance and push through your feet to stand.",
+          true
+        );
+        statusText.textContent = "GOOD";
+      } else {
+        showFeedback(
+          "Standing position",
+          "Begin your squat slowly. Keep your feet stable.",
+          true
+        );
+        statusText.textContent = "READY";
+      }
+    }
+
+    async function loadModel() {
+      feedback.textContent = "Loading pose detection...";
+      const vision = await FilesetResolver.forVisionTasks(
+        "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm"
+      );
+
+      poseLandmarker = await PoseLandmarker.createFromOptions(vision, {
+        baseOptions: {
+          modelAssetPath:
+            "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task",
+          delegate: "GPU"
+        },
+        runningMode: "VIDEO",
+        numPoses: 1
+      });
+    }
+
+    function loop() {
+      if (!running) return;
+
+      if (video.readyState >= 2 &&
+          video.currentTime !== lastVideoTime &&
+          poseLandmarker) {
+        lastVideoTime = video.currentTime;
+
+        const result = poseLandmarker.detectForVideo(
+          video,
+          performance.now()
+        );
+
+        if (result.landmarks && result.landmarks.length) {
+          const landmarks = result.landmarks[0];
+          drawPose(landmarks);
+          analyzePose(landmarks);
+        } else {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          showFeedback(
+            "No person detected",
+            "Face the camera and make sure your body is visible."
+          );
+          statusText.textContent = "--";
+        }
+      }
+
+      requestAnimationFrame(loop);
+    }
+
+    startBtn.addEventListener("click", async () => {
+      startBtn.disabled = true;
+
+      try {
+        if (!poseLandmarker) await loadModel();
+
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: "user",
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          },
+          audio: false
+        });
+
+        video.srcObject = stream;
+        await video.play();
+
+        running = true;
+        startBtn.disabled = true;
+        stopBtn.disabled = false;
+        showFeedback("Camera active", "Stand sideways to the camera.");
+        loop();
+      } catch (error) {
+        console.error(error);
+        showFeedback(
+          "Could not start camera",
+          "Allow camera permission and use localhost or HTTPS. Check your internet connection and try again."
+        );
+        startBtn.disabled = false;
+      }
+    });
+
+    stopBtn.addEventListener("click", () => {
+      running = false;
+
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        stream = null;
+      }
+
+      video.srcObject = null;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      startBtn.disabled = false;
+      stopBtn.disabled = true;
+      showFeedback("Camera stopped", "Click Start Camera to begin again.");
+      statusText.textContent = "--";
+      angleText.textContent = "--";
+    });
+  </script>
 </body>
 </html>
